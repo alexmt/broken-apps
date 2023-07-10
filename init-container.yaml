@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: init-container
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: init-container
+  template:
+    metadata:
+      labels:
+        app: init-container
+    spec:
+      initContainers:
+      - image: busybox
+        name: guestbook-init
+        command: ['sh', '-c', '/usr/local/bin/guestbookk --init']
+      containers:
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+        name: init-container
+        ports:
+        - containerPort: 80

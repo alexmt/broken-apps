@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: binary-two-containers
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  selector:
+    matchLabels:
+      app: binary
+  template:
+    metadata:
+      labels:
+        app: binary
+    spec:
+      containers:
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+        name: binary1
+        ports:
+        - containerPort: 80
+        command: ["/bin/sh", "-c"]
+        args: ["echo Hello Kubernetes! && /usr/local/bin/guestbookk1 -http_port=80"]
+      - image: gcr.io/heptio-images/ks-guestbook-demo:0.2
+        name: binary2
+        ports:
+        - containerPort: 80
+        command: ["/bin/sh", "-c"]
+        args: ["echo Hello Kubernetes! && /usr/local/bin/guestbookk2 -http_port=80"]
